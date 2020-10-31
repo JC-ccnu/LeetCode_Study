@@ -1,0 +1,24 @@
+给你一个整数数组 arr 和一个目标值 target ，请你返回一个整数 value ，使得将数组中所有大于 value 的值变成 value 后，数组的和最接近  target （最接近表示两者之差的绝对值最小）。
+
+如果有多种使得和最接近 target 的方案，请你返回这些整数中的最小值。
+
+请注意，答案不一定是 arr 中的数字。
+
+求前缀和的过程中以当前数arr[i]为value求和，当sum超过target，value必定在[arr[i-1], arr[i]]，这时直接计算value值即可
+
+class Solution:
+    def findBestValue(self, arr: List[int], target: int) -> int:
+        n = len(arr)
+        arr.sort()
+        pre = 0
+        for i in range(n):
+            curr_sum = pre + (n - i) * arr[i]
+            if curr_sum >= target:
+                value = (target - pre) // (n - i)
+                sum_low = pre + value * (n - i)
+                sum_high = sum_low + n - i
+                return value if (target - sum_low) <= (sum_high - target) else value + 1
+            pre += arr[i]
+
+        return arr[-1]
+
